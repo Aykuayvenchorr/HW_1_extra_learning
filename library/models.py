@@ -1,4 +1,5 @@
 from django.db import models
+from phonenumber_field.modelfields import PhoneNumberField
 
 
 class Author(models.Model):
@@ -18,10 +19,10 @@ class Author(models.Model):
 
 class Book(models.Model):
     title = models.CharField(max_length=50)
-    description = models.CharField(max_length=200)
-    num_pages = models.IntegerField()
+    description = models.TextField(max_length=200)
+    num_pages = models.PositiveIntegerField()
     author = models.ForeignKey(Author, on_delete=models.CASCADE)
-    quantity = models.IntegerField(null=False)
+    quantity = models.PositiveIntegerField(default=0)
     created = models.DateField(auto_now_add=True)
     edited = models.DateField(auto_now=True)
 
@@ -36,7 +37,7 @@ class Book(models.Model):
 class User(models.Model):
     name = models.CharField(max_length=50)
     surname = models.CharField(max_length=50)
-    phone_number = models.TextField(max_length=15)
+    phone_number = PhoneNumberField(blank=True)
     is_active = models.BooleanField(default=True)
     books = models.ManyToManyField(Book, max_length=3)
     created = models.DateField(auto_now_add=True)
