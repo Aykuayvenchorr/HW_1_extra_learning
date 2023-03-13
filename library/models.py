@@ -2,12 +2,18 @@ from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
 
 
-class Author(models.Model):
+class BaseModel(models.Model):
+    created = models.DateField(auto_now_add=True)
+    edited = models.DateField(auto_now=True)
+
+    class Meta:
+        abstract = True
+
+
+class Author(BaseModel):
     name = models.CharField(max_length=50)
     surname = models.CharField(max_length=50)
     photo = models.ImageField(upload_to='images/')
-    created = models.DateField(auto_now_add=True)
-    edited = models.DateField(auto_now=True)
 
     class Meta:
         verbose_name = 'Автор'
@@ -17,14 +23,12 @@ class Author(models.Model):
         return f"{self.name} {self.surname}"
 
 
-class Book(models.Model):
+class Book(BaseModel):
     title = models.CharField(max_length=50)
     description = models.TextField(max_length=200)
     num_pages = models.PositiveIntegerField()
     author = models.ForeignKey(Author, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=0)
-    created = models.DateField(auto_now_add=True)
-    edited = models.DateField(auto_now=True)
 
     class Meta:
         verbose_name = 'Книга'
@@ -34,14 +38,12 @@ class Book(models.Model):
         return self.title
 
 
-class User(models.Model):
+class User(BaseModel):
     name = models.CharField(max_length=50)
     surname = models.CharField(max_length=50)
     phone_number = PhoneNumberField(blank=True)
     is_active = models.BooleanField(default=True)
     books = models.ManyToManyField(Book, max_length=3)
-    created = models.DateField(auto_now_add=True)
-    edited = models.DateField(auto_now=True)
 
     class Meta:
         verbose_name = 'Читатель'
