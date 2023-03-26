@@ -22,11 +22,7 @@ class BookAdmin(admin.ModelAdmin):
 
     actions = ('change_quantity',)
 
-    def reduce_quantity(self, request, obj, form, change):
-        form.cleaned_data["quantity"] = form.cleaned_data["quantity"] - 1
-        return super().save_model(request, obj, form, change)
-
-        # метод для изменения наличия книг (установить значение 0)
+    # метод для изменения наличия книг (установить значение 0)
 
     @admin.action(description='Изменение наличия книг. Установить 0')
     def change_quantity(self, request, queryset: QuerySet):
@@ -50,7 +46,14 @@ class UserAdmin(admin.ModelAdmin):
         if len(form.cleaned_data["books"]) > 3:
             raise ValueError('Max only 3 books')
         else:
-            BookAdmin.reduce_quantity()
+            list_books = []
+            for book in form.cleaned_data["books"]:
+                list_books.append(book)
+                b = Book.objects.get(title=book.title)
+                b.quantity -= 1
+                b.save()
+
+            self.message_user(request, f"{list_books}")
         return super().save_model(request, obj, form, change)
 
     # метод для изменения статуса активности читателя
@@ -69,4 +72,5 @@ class UserAdmin(admin.ModelAdmin):
     @admin.action(description='Удалить все книги у пользователя')
     def delete_books(self, request, queryset: QuerySet):
         for el in queryset:
-            el.books.all().delete()
+            el.books.clear()
+            self.message_user(request, f'{el.books}')
