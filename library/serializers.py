@@ -12,8 +12,9 @@ class PhoneValidator:
 
 class BookValidator:
     def __call__(self, value):
-        if int(value) < 1:
+        if value < 1:
             raise serializers.ValidationError("Количество страниц не может быть отрицательным")
+
 
 class ReaderSerializer(serializers.ModelSerializer):
 
@@ -25,5 +26,3 @@ class ReaderSerializer(serializers.ModelSerializer):
     def __validate_count_books(books: dict):
         if len(books) > 3:
             raise ValidationError('Max count books 3')
-
-

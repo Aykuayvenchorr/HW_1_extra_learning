@@ -28,9 +28,9 @@ class Author(BaseModel):
 class Book(BaseModel):
     title = models.CharField(max_length=50)
     description = models.TextField(max_length=200)
-    num_pages = models.PositiveIntegerField()
+    num_pages = models.PositiveIntegerField(validators=[BookValidator])
     author = models.ForeignKey(Author, on_delete=models.CASCADE)
-    quantity = models.PositiveIntegerField(default=0, validators=[BookValidator()])
+    quantity = models.PositiveIntegerField(default=0)
 
     class Meta:
         verbose_name = 'Книга'
@@ -43,7 +43,7 @@ class Book(BaseModel):
 class User(BaseModel):
     name = models.CharField(max_length=50)
     surname = models.CharField(max_length=50)
-    phone_number = PhoneNumberField(blank=True, validators=[PhoneValidator()])
+    phone_number = PhoneNumberField(blank=True, validators=[PhoneValidator])
     is_active = models.BooleanField(default=True)
     books = models.ManyToManyField(Book, max_length=3, related_name='books')
 
