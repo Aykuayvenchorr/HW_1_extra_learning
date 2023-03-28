@@ -1,19 +1,17 @@
 from rest_framework import serializers
-from rest_framework.exceptions import ValidationError
+from django.core.exceptions import ValidationError
 
 
-class PhoneValidator:
-    def __call__(self, value):
-        if len(str(value)[1::]) != 11:
-            raise serializers.ValidationError("В номере должно быть 11 цифр")
-        if str(value)[1] != '7':
-            raise serializers.ValidationError("Номер должен начинаться с 7")
+def phone_validator(value):
+    if len(str(value)[1::]) != 11:
+        raise ValidationError("В номере должно быть 11 цифр")
+    if str(value)[1] != '7':
+        raise ValidationError("Номер должен начинаться с 7")
 
 
-class BookValidator:
-    def __call__(self, value):
-        if value < 1:
-            raise serializers.ValidationError("Количество страниц не может быть отрицательным")
+def book_validator(value):
+    if value < 1:
+        raise ValidationError("Количество страниц не может быть отрицательным")
 
 
 class ReaderSerializer(serializers.ModelSerializer):
