@@ -1,7 +1,7 @@
 from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
 
-from library.serializers import phone_validator, book_validator
+from library.validators import phone_validator, book_validator
 
 
 class BaseModel(models.Model):

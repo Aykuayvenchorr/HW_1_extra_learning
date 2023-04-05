@@ -16,12 +16,26 @@ Including another URLconf
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path
+from rest_framework import routers
 
 from HW_1_extra_learning import settings
+from library.views import BookListView, BookCreateView, BookUpdateView, BookDeleteView, BookDetailView, AuthorListView, \
+    AuthorViewSet, UserViewSet
+
+router = routers.SimpleRouter()
+router.register('author', AuthorViewSet)
+router.register('user', UserViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('book/', BookListView.as_view()),
+    path('book/create', BookCreateView.as_view()),
+    path('book/<int:pk>', BookDetailView.as_view()),
+    path('book/<int:pk>/update/', BookUpdateView.as_view()),
+    path('book/<int:pk>/delete/', BookDeleteView.as_view()),
 ]
+
+urlpatterns += router.urls
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -1,26 +1,33 @@
 from rest_framework import serializers
-from django.core.exceptions import ValidationError
+
+from library.models import Book, Author, User
 
 
-def phone_validator(value):
-    if len(str(value)[1::]) != 11:
-        raise ValidationError("В номере должно быть 11 цифр")
-    if str(value)[1] != '7':
-        raise ValidationError("Номер должен начинаться с 7")
+class AuthorSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Author
+        fields = '__all__'
 
 
-def book_validator(value):
-    if value < 1:
-        raise ValidationError("Количество страниц не может быть отрицательным")
+class BookSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Book
+        fields = '__all__'
 
 
-class ReaderSerializer(serializers.ModelSerializer):
+class UserSerializer(serializers.ModelSerializer):
 
-    def validate(self, data):
-        self.__validate_count_books(data.get('books'))
-        return super().validate(data)
+    class Meta:
+        model = User
+        fields = '__all__'
 
-    @staticmethod
-    def __validate_count_books(books: dict):
-        if len(books) > 3:
-            raise ValidationError('Max count books 3')
+# class ReaderSerializer(serializers.ModelSerializer):
+#
+#     def validate(self, data):
+#         self.__validate_count_books(data.get('books'))
+#         return super().validate(data)
+#
+#     @staticmethod
+#     def __validate_count_books(books: dict):
+#         if len(books) > 3:
+#             raise ValidationError('Max count books 3')
