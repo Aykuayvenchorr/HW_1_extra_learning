@@ -1,4 +1,6 @@
+from django.contrib.auth.models import User
 from django.db import models
+from django.db.models import CASCADE
 from phonenumber_field.modelfields import PhoneNumberField
 
 from library.validators import phone_validator, book_validator
@@ -15,7 +17,7 @@ class BaseModel(models.Model):
 class Author(BaseModel):
     name = models.CharField(max_length=50)
     surname = models.CharField(max_length=50)
-    photo = models.ImageField(upload_to='images/')
+    photo = models.ImageField(upload_to='images/', null=True)
 
     class Meta:
         verbose_name = 'Автор'
@@ -40,17 +42,18 @@ class Book(BaseModel):
         return self.title
 
 
-class User(BaseModel):
+class Reader(BaseModel):
     name = models.CharField(max_length=50)
     surname = models.CharField(max_length=50)
     phone_number = PhoneNumberField(blank=True, validators=[phone_validator])
     is_active = models.BooleanField(default=True)
     books = models.ManyToManyField(Book, max_length=3, related_name='books')
-
-    # def display_books(self):
-    #     return ', '.join([book.name for book in self.books.all()])
-    #
-    # display_books.short_description = 'Книги'
+    user = models.OneToOneField(
+        User,
+        verbose_name="Пользователь",
+        related_name="reader",
+        on_delete=CASCADE,
+    )
 
     class Meta:
         verbose_name = 'Читатель'

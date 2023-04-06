@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.contrib.admin import register
 from django.db.models import QuerySet
 
-from library.models import Author, Book, User
+from library.models import Author, Book, Reader
 
 
 # admin.site.register(Author)
@@ -30,8 +30,8 @@ class BookAdmin(admin.ModelAdmin):
         self.message_user(request, f"Количество книг {queryset.values('quantity')}")
 
 
-@register(User)
-class UserAdmin(admin.ModelAdmin):
+@register(Reader)
+class ReaderAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'surname', 'phone_number', 'is_active', 'get_books')
     list_filter = ('is_active',)
 

@@ -17,22 +17,23 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path
 from rest_framework import routers
+from rest_framework.authtoken import views
 
 from HW_1_extra_learning import settings
-from library.views import BookListView, BookCreateView, BookUpdateView, BookDeleteView, BookDetailView, AuthorListView, \
-    AuthorViewSet, UserViewSet
+from library.views import BookListView, BookCreateView, BookUpdateView, BookDeleteView, BookDetailView, AuthorViewSet, ReaderViewSet
 
 router = routers.SimpleRouter()
 router.register('author', AuthorViewSet)
-router.register('user', UserViewSet)
+router.register('reader', ReaderViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('book/', BookListView.as_view()),
-    path('book/create', BookCreateView.as_view()),
-    path('book/<int:pk>', BookDetailView.as_view()),
+    path('book/create/', BookCreateView.as_view()),
+    path('book/<int:pk>/', BookDetailView.as_view()),
     path('book/<int:pk>/update/', BookUpdateView.as_view()),
     path('book/<int:pk>/delete/', BookDeleteView.as_view()),
+    path('login/', views.obtain_auth_token),
 ]
 
 urlpatterns += router.urls
